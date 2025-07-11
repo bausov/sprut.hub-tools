@@ -1,828 +1,950 @@
-// @ts-nocheck
-
-declare var log: Log
+declare var log: Log;
 
 declare enum HC {}
 
 declare enum HS {}
 
-declare var console: Log
-declare var Hub: Hub
-declare var Cron: Cron
-declare var Notify: Notifier
-declare var SSH: SSH
-declare var Mail: Mail
+// @ts-ignore
+/**
+ * Интерфейс для работы с логами
+ */
+declare var console: Log;
+/**
+ * Главный интерфейс для работы с устройствами в Sprut.Hub
+ */
+declare var Hub: Hub;
+/**
+ * Планировщик событий Cron
+ */
+declare var Cron: Cron;
+/**
+ * Интерфейс для работы с уведомлениями
+ */
+declare var Notify: Notifier;
+/**
+ * Интерфейс для подключения к внешним устройствам по SSH
+ */
+declare var SSH: SSH;
+/**
+ * Интерфейс для отправки E-Mail сообщений
+ */
+declare var Mail: Mail;
+/**
+ * Интерфейс для выполнения HTTP запросов
+ */
+declare var HttpClient: HttpClient;
 
-declare var Utils: Utils
-declare var UtilsNet: UtilsNet
+/**
+ * Различные утилиты
+ */
 
-declare var HttpClient: HttpClient
+declare var Utils: Utils;
+/**
+ * Сетевые утилиты
+ */
+declare var UtilsNet: UtilsNet;
 
-declare var GlobalVariables: {}
-declare var LocalVariables: {}
-declare var global: {}
 
-declare function setInterval(
-    handler: Function,
-    timeout?: number,
-    ...arguments: any[]
-): Task
+/**
+ * Глобальные переменные. Хранятся в памяти. Очищаются при перезагрузке
+ */
+declare var GlobalVariables: {};
+/**
+ * Локальные переменные. Хранятся внутри сценария, очищаются при сохранении изменений в сценарии и при перезагрузке хаба.
+ */
+declare var LocalVariables: {};
+/**
+ * Алиас для GlobalVariables
+ */
+declare var global: {};
 
-declare function setTimeout(
-    handler: Function,
-    timeout?: number,
-    ...arguments: any[]
-): Task
 
-declare function clearInterval(task: Task)
+/**
+ * Устанавливает повторяющийся таймер с указанным обработчиком и интервалом
+ * @param handler Функция-обработчик, вызываемая по интервалу
+ * @param timeout Интервал времени в миллисекундах
+ * @param arguments Дополнительные аргументы для обработчика
+ * @returns Задача (Task), связанная с этим таймером
+ */
+declare function setInterval(handler: Function, timeout?: number, ...arguments: any[]): Task;
 
-declare function clearTimeout(task: Task)
+/**
+ * Устанавливает таймер с единовременным вызовом обработчика после задержки
+ * @param handler Функция-обработчик, вызываемая после задержки
+ * @param timeout Задержка в миллисекундах
+ * @param arguments Дополнительные аргументы для обработчика
+ * @returns Задача (Task), связанная с этим таймером
+ */
+declare function setTimeout(handler: Function, timeout?: number, ...arguments: any[]): Task;
 
-declare function clear(task: Task)
+/**
+ * Останавливает повторяющийся таймер, заданный с помощью setInterval
+ * @param task Задача (Task), связанная с таймером, которая возвращается при вызове setInterval
+ */
+declare function clearInterval(task: Task);
 
+/**
+ * Останавливает таймер, заданный с помощью setTimeout
+ * @param task Задача (Task), связанная с таймером, которая возвращается при вызове setTimeout
+ */
+declare function clearTimeout(task: Task);
+
+/**
+ * Очищает задачу (Task), связанную с таймером или другим процессом
+ * @param task Задача (Task) для очистки
+ */
+declare function clear(task: Task);
+
+
+/**
+ * Главный интерфейс Sprut.Hub для доступа и управление устройствами
+ */
 interface Hub {
     /**
-     * Returns accessory
-     * @param id
+     * Возвращает аксессуар
+     * @param id Идентификатор аксессуара
      */
-    getAccessory(id: number): Accessory
+    getAccessory(id: number): Accessory;
 
     /**
-     * Returns all accessories
+     * Возвращает все аксессуары
      */
-    getAccessories(): Accessory[]
+    getAccessories(): Accessory[];
 
     /**
-     * Returns the value of variable
-     * @param aid
-     * @param cid
+     * Возвращает значение характеристики
+     * @param aid Идентификатор аксессуара
+     * @param cid Идентификатор характеристики
      */
-    getCharacteristicValue(aid: number, cid: number): any
+    getCharacteristicValue(aid: number, cid: number): any;
 
     /**
-     * Sets a value to characteristic
-     * @param aid
-     * @param cid
-     * @param value
+     * Устанавливает новое значение конкретной характеристики
+     * @param aid Идентификатор аксессуара
+     * @param cid Идентификатор характеристики
+     * @param value Значение для установки
      */
-    setCharacteristicValue(aid: number, cid: number, value: any)
+    setCharacteristicValue(aid: number, cid: number, value: any);
 
     /**
-     * Sets a value to characteristic
-     * @param aid
-     * @param cid
+     * Переключает значение характеристики (только для boolean характеристик, например HC.On)
+     * @param aid Идентификатор аксессуара
+     * @param cid Идентификатор характеристики
      */
-    toggleCharacteristicValue(aid: number, cid: number)
+    toggleCharacteristicValue(aid: number, cid: number);
 
     /**
-     * Returns the value of characteristic
-     * @param aid
-     * @param cid
+     * Возвращает характеристику
+     * @param aid Идентификатор аксессуара
+     * @param cid Идентификатор характеристики
      */
-    getCharacteristic(aid: number, cid: number): Characteristic
+    getCharacteristic(aid: number, cid: number): Characteristic;
 
     /**
-     * Returns all rooms
+     * Возвращает все комнаты
      */
-    getRooms(): Room[]
+    getRooms(): Room[];
 
     /**
-     * info
-     * @param handler
-     * @param args
+     * Подписка на обновления изменения характеристики
+     * @param handler Обработчик события
+     * @param args Дополнительные аргументы
      */
-    subscribe(handler: Function, ...args): Task
+    subscribe(handler: Function, ...args): Task;
 
     /**
-     * info
-     * @param cond
-     * @param value
-     * @param hs
-     * @param hc
-     * @param handler
-     * @param args
+     * Подписка на обновления изменения характеристики с условием
+     * @param cond Условие
+     * @param value Значение
+     * @param hs Массив сервисов, на которые нужна подписка
+     * @param hc Массив характеристик, на которые нужна подписка
+     * @param handler Обработчик события
+     * @param args Дополнительные аргументы
      */
-    subscribeWithCondition(
-        cond: string,
-        value: string,
-        [hs],
-        [hc],
-        handler: Function,
-        ...args
-    ): Task
-
-    /**
-     * info
-     * @param uuid
-     */
-    //unsubscribe(uuid: string);
+    subscribeWithCondition(cond: string, value: string, [hs], [hc], handler: Function, ...args): Task;
 }
 
+/**
+ * Аксессуар - это конкретное устройство
+ */
 interface Accessory {
     /**
-     * info
+     * Возвращает список сервисов у аксессуара
      */
-    getServices(): Service[]
+    getServices(): Service[];
 
     /**
-     * info
-     * @param visible
+     * Возвращает список сервисов с фильтром по видимости
+     * @param visible Видимость сервисов. true - видимые, false - скрытые
      */
-    getServices(visible: boolean): Service[]
+    getServices(visible: boolean): Service[];
 
     /**
-     * info
-     * @param visible
-     * @param hs
+     * Возвращает список сервисов с фильтром по видимости и типу
+     * @param visible Видимость сервисов. true - видимые, false - скрытые
+     * @param hs Тип сервиса
      */
-    getServices(visible: boolean, hs: HS): Service[]
+    getServices(visible: boolean, hs: HS): Service[];
 
     /**
-     * info
-     * @param id
+     * Возвращает сервис по идентификатору
+     * @param id Идентификатор сервиса
      */
-    getService(id: number): Service
+    getService(id: number): Service;
 
     /**
-     * info
-     * @param hs
+     * Возвращает сервис по типу
+     * @param hs Тип сервиса (HS)
      */
-    getService(hs: HS): Service
+    getService(hs: HS): Service;
 
     /**
-     * Returns the value of characteristic
-     * @param id
+     * Возвращает характеристику по идентификатору
+     * @param id Идентификатор характеристики
      */
-    getCharacteristic(id: number): Characteristic
+    getCharacteristic(id: number): Characteristic;
 
     /**
-     * info
+     * Возвращает комнату аксессуара
      */
-    getRoom(): Room
+    getRoom(): Room;
 
     /**
-     * info
+     * Возвращает идентификатор (ID) аксессуара
      */
-    getUUID(): String
+    getUUID(): String;
 
     /**
-     * info
+     * Возвращает имя аксессуара
      */
-    getName(): String
+    getName(): String;
 
     /**
-     * info
-     * @param name
+     * Устанавливает имя аксессуара
+     * @param name Новое имя аксессуара
      */
-    setName(name: string)
+    setName(name: string);
 
     /**
-     * info
+     * Возвращает модель аксессуара
      */
-    getModel(): String
+    getModel(): String;
 
     /**
-     * info
+     * Возвращает идентификатор модели аксессуара
      */
-    getModelId(): String
+    getModelId(): String;
 
     /**
-     * info
+     * Возвращает производителя аксессуара
      */
-    getManufacturer(): String
+    getManufacturer(): String;
 
     /**
-     * info
+     * Возвращает идентификатор производителя аксессуара
      */
-    getManufacturerId(): String
+    getManufacturerId(): String;
 
     /**
-     * info
+     * Возвращает серийный номер аксессуара
      */
-    getSerial(): String
+    getSerial(): String;
 
     /**
-     * info
+     * Возвращает версию прошивки аксессуара
      */
-    getFirmware(): String
+    getFirmware(): String;
 
     /**
-     * info
+     * Возвращает скриншот. Поддерживаются только устройство с видеопотоком (камеры)
      */
-    getSnapshot(): number[]
+    getSnapshot(): number[];
 
     /**
-     * info
+     * Возвращает скриншот с указанными размерами. Поддерживаются только устройство с видеопотоком (камеры)
+     * @param width Ширина снимка
+     * @param height Высота снимка
      */
-    getSnapshot(width: number, height: number): number[]
+    getSnapshot(width: number, height: number): number[];
 }
 
+/**
+ * Сервис. В каждом аксессуаре может быть один или несколько сервисов
+ */
 interface Service {
     /**
-     * info
+     * Возвращает аксессуар
      */
-    getAccessory(): Accessory
+    getAccessory(): Accessory;
 
     /**
-     * info
-     * @param id
+     * Возвращает характеристику по идентификатору
+     * @param id Идентификатор характеристики
      */
-    getCharacteristic(id: number): Characteristic
+    getCharacteristic(id: number): Characteristic;
 
     /**
-     * info
-     * @param hc
+     * Возвращает характеристику по типу
+     * @param hc Тип характеристики (HC)
      */
-    getCharacteristic(hc: HC): Characteristic
+    getCharacteristic(hc: HC): Characteristic;
 
     /**
-     * info
+     * Возвращает все досутпные характеристики сервиса
      */
-    getCharacteristics(): Characteristic[]
+    getCharacteristics(): Characteristic[];
 
     /**
-     * info
+     * Возвращает тип сервиса
      */
-    getType(): HS
+    getType(): HS;
 
     /**
-     * info
+     * Проверяет, видим ли сервис
      */
-    isVisible(): boolean
+    isVisible(): boolean;
 
     /**
-     * info
-     * @param visible
+     * Устанавливает видимость сервиса
+     * @param visible Видимость. true - видим, false - не видим
      */
-    setVisible(visible: boolean)
+    setVisible(visible: boolean);
 
     /**
-     * info
+     * Возвращает идентификатор (ID) сервиса
      */
-    getUUID(): String
+    getUUID(): String;
 
     /**
-     * info
+     * Возвращает имя сервиса
      */
-    getName(): String
+    getName(): String;
 
     /**
-     * info
-     * @param name
+     * Устанавливает имя сервиса
+     * @param name Новое имя сервиса
      */
-    setName(name: string)
+    setName(name: string);
 }
 
+/**
+ * Характеристика. В каждом сервисе может быть одна или несколько характеристик, часть из которых обязательные
+ */
 interface Characteristic {
     /**
-     * info
+     * Возвращает аксессуар, связанный с характеристикой
      */
-    getAccessory(): Accessory
+    getAccessory(): Accessory;
 
     /**
-     * info
+     * Возвращает сервис, связанный с характеристикой
      */
-    getService(): Service
+    getService(): Service;
 
     /**
-     * info
+     * Возвращает значение характеристики с типом, характерным для данной характеристики
      */
-    getValue(): any
+    getValue(): any;
 
     /**
-     * info
-     * @param value
+     * Устанавливает значение для характеристики
+     * @param value Новое значение характеристики
      */
-    setValue(value: any)
+    setValue(value: any);
 
     /**
-     * info
+     * Переключает значение характеристики (только для boolean характеристик, например HC.On)
      */
-    toggle()
+    toggle();
 
     /**
-     * info
+     * Проверяет, отображается ли статус характеристики (в панели статусов в комнате)
      */
-    isStatusVisible(): boolean
+    isStatusVisible(): boolean;
 
     /**
-     * info
-     * @param statusVisible
+     * Устанавливает видимость статуса характеристики
+     * @param statusVisible Видимость статуса
      */
-    setStatusVisible(statusVisible: boolean)
+    setStatusVisible(statusVisible: boolean);
 
     /**
-     * info
+     * Проверяет, включено ли уведомление о изменении значения характеристики
      */
-    isNotify(): boolean
+    isNotify(): boolean;
 
     /**
-     * info
-     * @param notify
+     * Устанавливает уведомление о изменении значения характеристики
+     * @param notify Включение (true) или отключение (false) уведомлений
      */
-    setNotify(notify: boolean)
+    setNotify(notify: boolean);
 
     /**
-     * info
+     * Возвращает тип характеристики
      */
-    getType(): HC
+    getType(): HC;
 
     /**
-     * info
+     * Возвращает идентификатор (ID) характеристики
      */
-    getUUID(): String
+    getUUID(): String;
 
     /**
-     * format
+     * Форматирует характеристику в строку
      */
-    format(): String
+    format(): String;
 
     /**
-     * getMinValue
+     * Возвращает минимальное значение характеристики
      */
-    getMinValue(): number
+    getMinValue(): number;
 
     /**
-     * getMaxValue
+     * Возвращает максимальное значение характеристики
      */
-    getMaxValue(): number
+    getMaxValue(): number;
 
     /**
-     * getMinStep
+     * Возвращает минимальный шаг изменения значения характеристики
      */
-    getMinStep(): number
+    getMinStep(): number;
 
     /**
-     * info
+     * Возвращает имя характеристики
      */
-    getName(): String
+    getName(): String;
 }
 
+/**
+ * Комната
+ */
 interface Room {
     /**
-     * info
+     * Возвращает список аксессуаров в комнате
      */
-    getAccessories(): Accessory[]
+    getAccessories(): Accessory[];
 
     /**
-     * info
+     * Возвращает имя комнаты
      */
-    getName(): String
+    getName(): String;
 
     /**
-     * info
-     * @param name
+     * Устанавливает имя комнаты
+     * @param name Новое имя комнаты
      */
-    setName(name: string)
+    setName(name: string);
 }
 
+/**
+ * Интерфейс для отправки сетевых запросов
+ */
 interface HttpClient {
     /**
-     * Returns accessory
-     * @param url
+     * Выполняет GET-запрос
+     * @param url URL для запроса
      */
-    GET(url: string): HttpRequest
+    GET(url: string): HttpRequest;
 
     /**
-     * Returns accessory
-     * @param url
+     * Выполняет POST-запрос
+     * @param url URL для запроса
      */
-    POST(url: string): HttpRequest
+    POST(url: string): HttpRequest;
 
     /**
-     * Returns accessory
-     * @param url
+     * Выполняет PUT-запрос
+     * @param url URL для запроса
      */
-    PUT(url: string): HttpRequest
+    PUT(url: string): HttpRequest;
 
     /**
-     * Returns accessory
-     * @param url
+     * Выполняет HEAD-запрос
+     * @param url URL для запроса
      */
-    HEAD(url: string): HttpRequest
+    HEAD(url: string): HttpRequest;
 
     /**
-     * Returns accessory
-     * @param url
+     * Выполняет DELETE-запрос
+     * @param url URL для запроса
      */
-    DELETE(url: string): HttpRequest
+    DELETE(url: string): HttpRequest;
 
     /**
-     * Returns accessory
-     * @param url
+     * Выполняет OPTIONS-запрос
+     * @param url URL для запроса
      */
-    OPTIONS(url: string): HttpRequest
+    OPTIONS(url: string): HttpRequest;
 
     /**
-     * Returns accessory
-     * @param url
+     * Выполняет PATCH-запрос
+     * @param url URL для запроса
      */
-    PATCH(url: string): HttpRequest
+    PATCH(url: string): HttpRequest;
 }
 
+/**
+ * Сетевой запрос
+ */
 interface HttpRequest {
+
     /////////////////////////////////////////////////////
     ////////URL
     /////////////////////////////////////////////////////
 
     /**
-     * Set header
-     * @param url
+     * Устанавливает URL для запроса
+     * @param url URL-адрес
      */
-    setURL(url: String): HttpRequest
+    setURL(url: String): HttpRequest;
 
     /**
-     * info
-     * @param name
-     * @param value
+     * Добавляет параметр строки запроса
+     * @param name Имя параметра
+     * @param value Значение параметра
      */
-    queryString(name: String, value: Object): HttpRequest
+    queryString(name: String, value: Object): HttpRequest;
 
     /**
-     * info
-     * @param segment
+     * Добавляет сегмент пути в URL
+     * @param segment Сегмент пути
      */
-    path(segment: String): HttpRequest
+    path(segment: String): HttpRequest;
 
     /**
-     * info
-     * @param info
+     * Добавляет информацию о пользователе в запрос
+     * @param info Информация о пользователе
      */
-    userInfo(info: String): HttpRequest
+    userInfo(info: String): HttpRequest;
 
     /**
-     * info
-     * @param num
+     * Устанавливает порт для запроса
+     * @param num Номер порта
      */
-    port(num: number): HttpRequest
+    port(num: number): HttpRequest;
 
     /////////////////////////////////////////////////////
     ////////header
     /////////////////////////////////////////////////////
 
     /**
-     * Set header
-     * @param name
-     * @param value
+     * Устанавливает заголовок запроса (может быть несколько)
+     * @param name Имя заголовка
+     * @param value Значение заголовка
      */
-    header(name: String, value: Object): HttpRequest
+    header(name: String, value: Object): HttpRequest;
 
     /**
-     * Set cookie
-     * @param name
-     * @param value
+     * Устанавливает cookie для запроса
+     * @param name Имя cookie
+     * @param value Значение cookie
      */
-    cookie(name: String, value: String): HttpRequest
+    cookie(name: String, value: String): HttpRequest;
 
     /**
-     * Remove header key
-     * @param name
+     * Удаляет указанный заголовок из запроса
+     * @param name Имя заголовка
      */
-    reset(name: String): HttpRequest
+    reset(name: String): HttpRequest;
 
     /////////////////////////////////////////////////////
     ////////method
     /////////////////////////////////////////////////////
 
     /**
-     * info
-     * @param method
+     * Устанавливает метод запроса
+     * @param method Метод HTTP (GET, POST и т.д.)
      */
-    method(method: String): HttpRequest
+    method(method: String): HttpRequest;
 
     /////////////////////////////////////////////////////
     ////////body
     /////////////////////////////////////////////////////
 
     /**
-     * info
-     * @param name
-     * @param value
+     * Устанавливает значение поля для формы
+     * @param name название поля
+     * @param value значение
      */
-    field(name: String, value: Object): HttpRequest
+    field(name: String, value: Object): HttpRequest;
+
 
     /**
-     * info
-     * @param name
-     * @param value
+     * Поля Multipart запроса
+     * @param name название поля
+     * @param value значение
      */
-    fieldMultipart(name: String, value: Object): HttpRequest
+    fieldMultipart(name: String, value: Object): HttpRequest;
+
 
     /**
-     * info
-     * @param text
+     * Добавляет текстовое тело к запросу
+     * @param text Текст для отправки в теле
      */
-    body(text: String): HttpRequest
+    body(text: String): HttpRequest;
 
     /**
-     * info
-     * @param body
+     * Добавляет массив в качестве тела запроса
+     * @param body Массив данных
      */
-    body(body: []): HttpRequest
+    body(body: []): HttpRequest;
 
     /////////////////////////////////////////////////////
     ////////main
     /////////////////////////////////////////////////////
 
     /**
-     * info
-     * @param connectTimeout
-     * @param readTimeout
+     * Устанавливает таймаут для соединения и чтения
+     * @param connectTimeout Таймаут подключения
+     * @param readTimeout Таймаут чтения
      */
-    timeout(connectTimeout: number, readTimeout: number): HttpRequest
+    timeout(connectTimeout: number, readTimeout: number): HttpRequest;
 
     /**
-     * info
-     * @param connectTimeout
+     * Устанавливает таймаут подключения
+     * @param connectTimeout Таймаут подключения
      */
-    connectTimeout(connectTimeout: number): HttpRequest
+    connectTimeout(connectTimeout: number): HttpRequest;
 
     /**
-     * info
-     * @param readTimeout
+     * Устанавливает таймаут чтения
+     * @param readTimeout Таймаут чтения
      */
-    readTimeout(readTimeout: number): HttpRequest
+    readTimeout(readTimeout: number): HttpRequest;
 
     /**
-     * info
-     * @param noCheckCertificate
+     * Отключает проверку сертификата
+     * @param noCheckCertificate Флаг отключения проверки
      */
-    noCheckCertificate(noCheckCertificate: boolean): HttpRequest
+    noCheckCertificate(noCheckCertificate: boolean): HttpRequest;
 
     /**
-     * info
+     * Отправляет запрос
      */
-    send(): HttpResponse
+    send(): HttpResponse;
 }
 
+/**
+ * Ответ сетевого запроса
+ */
 interface HttpResponse {
     /**
-     * info
+     * Возвращает предыдущий запрос
      */
-    back(): HttpRequest
+    back(): HttpRequest;
 
     /**
-     * info
+     * Возвращает статус ответа
      */
-    getStatus(): number
+    getStatus(): number;
 
     /**
-     * info
+     * Возвращает текст статуса ответа
      */
-    getStatusText(): String
+    getStatusText(): String;
 
     /**
-     * info
+     * Возвращает заголовки ответа
      */
-    getHeaders(): Record
+    getHeaders(): Record;
 
     /**
-     * info
+     * Возвращает cookies из ответа
      */
-    getCookies(): Record
+    getCookies(): Record;
 
     /**
-     * info
+     * Возвращает тело ответа в виде строки
      */
-    getBody(): String
+    getBody(): String;
 
     /**
-     * info
+     * Возвращает бинарные данные ответа
      */
-    getBinary(): []
+    getBinary(): [];
 }
 
+/**
+ * Интерфейс вывода логов, вызывать для инстанса console
+ */
 interface Log {
     /**
-     * info
-     * @param format
-     * @param arg
+     * Логирует сообщение
+     * @param format Формат сообщения
+     * @param arg Аргументы для форматирования
      */
-    message(format: string, ...arg: any)
+    message(format: string, ...arg: any);
 
     /**
-     * info
-     * @param format
-     * @param arg
+     * Логирует информационное сообщение
+     * @param format Формат сообщения
+     * @param arg Аргументы для форматирования
      */
-    info(format: string, ...arg: any)
+    info(format: string, ...arg: any);
 
     /**
-     * info
-     * @param format
-     * @param arg
+     * Логирует предупреждение
+     * @param format Формат сообщения
+     * @param arg Аргументы для форматирования
      */
-    warn(format: string, ...arg: any)
+    warn(format: string, ...arg: any);
 
     /**
-     * info
-     * @param format
-     * @param arg
+     * Логирует ошибку
+     * @param format Формат сообщения
+     * @param arg Аргументы для форматирования
      */
-    error(format: string, ...arg: any)
+    error(format: string, ...arg: any);
 }
 
+/**
+ * Задача
+ */
 interface Task {
+
     /**
-     * info
+     * Останавливает и очищает задачу
      */
-    clear()
+    clear();
 }
 
+/**
+ * Запуск задач по расписанию
+ */
 interface Cron {
     /**
-     * info
-     * @param schedule
-     * @param handler
-     * @param arguments
+     * Запускает задачу по расписанию
+     * @param schedule Расписание в формате Cron
+     * @param handler Функция-обработчик
+     * @param arguments Дополнительные аргументы
+     * @returns Задача (Task), связанная с расписанием
      */
-    schedule(schedule: string, handler: Function, ...arguments: any[]): Task
+    schedule(schedule: string, handler: Function, ...arguments: any[]): Task;
 
     /**
-     * info
-     * @param schedule
-     * @param offset
-     * @param handler
-     * @param arguments
+     * Запускает задачу на рассвете
+     * @param schedule Расписание в формате Cron
+     * @param offset Смещение времени в минутах
+     * @param handler Функция-обработчик
+     * @param arguments Дополнительные аргументы
+     * @returns Задача (Task), связанная с расписанием
      */
-    sunrise(
-        schedule: string,
-        offset: number,
-        handler: Function,
-        ...arguments: any[]
-    ): Task
+    sunrise(schedule: string, offset: number, handler: Function, ...arguments: any[]): Task;
 
     /**
-     * info
-     * @param schedule
-     * @param offset
-     * @param handler
-     * @param arguments
+     * Запускает задачу на закате
+     * @param schedule Расписание в формате Cron
+     * @param offset Смещение времени в минутах
+     * @param handler Функция-обработчик
+     * @param arguments Дополнительные аргументы
+     * @returns Задача (Task), связанная с расписанием
      */
-    sunset(
-        schedule: string,
-        offset: number,
-        handler: Function,
-        ...arguments: any[]
-    ): Task
+    sunset(schedule: string, offset: number, handler: Function, ...arguments: any[]): Task;
 }
 
+/**
+ * Утилиты
+ */
 interface Utils {
+
     /**
-     * info
+     * Генерирует UUID
+     * @returns Строка с уникальным идентификатором
      */
-    uuid(): String
+    uuid(): String;
+
 }
 
+/**
+ * Сетевые утилиты
+ */
 interface UtilsNet {
-    /**
-     * info
-     * @param mac
-     */
-    wakeOnLan(mac: String)
 
     /**
-     * info
-     * @param host
+     * Отправляет Wake-on-LAN сигнал для включения устройства
+     * @param mac MAC-адрес устройства
      */
-    getMacAddress(host: String)
+    wakeOnLan(mac: String);
 
     /**
-     * info
-     * @param host
+     * Возвращает MAC-адрес устройства по имени хоста
+     * @param host Имя хоста или IP-адрес устройства
+     * @returns MAC-адрес устройства
      */
-    ping(host: String): boolean
+    getMacAddress(host: String);
+
+    /**
+     * Проверяет доступность устройства через пинг
+     * @param host Имя хоста или IP-адрес устройства
+     * @returns true, если устройство доступно; иначе false
+     */
+    ping(host: String): boolean;
+
 }
 
+/**
+ * Почтовый клиент для отправки E-Mail сообщений
+ */
 interface Mail {
-    /**
-     * info
-     * @param host
-     */
-    host(host: String): Mail
 
     /**
-     * info
-     * @param port
+     * Устанавливает хост почтового сервера
+     * @param host Адрес почтового сервера
+     * @returns Текущий объект Mail
      */
-    port(port: number): Mail
+    host(host: String): Mail;
 
     /**
-     * info
-     * @param username
+     * Устанавливает порт почтового сервера
+     * @param port Номер порта
+     * @returns Текущий объект Mail
      */
-    username(username: String): Mail
+    port(port: number): Mail;
 
     /**
-     * info
-     * @param from
+     * Устанавливает имя пользователя для авторизации
+     * @param username Имя пользователя
+     * @returns Текущий объект Mail
      */
-    from(from: String): Mail
+    username(username: String): Mail;
 
     /**
-     * info
-     * @param password
+     * Устанавливает отправителя письма
+     * @param from Адрес отправителя
+     * @returns Текущий объект Mail
      */
-    password(password: String): Mail
+    from(from: String): Mail;
 
     /**
-     * info
-     * @param to
+     * Устанавливает пароль для авторизации
+     * @param password Пароль пользователя
+     * @returns Текущий объект Mail
      */
-    to(to: String): Mail
+    password(password: String): Mail;
 
     /**
-     * info
-     * @param subject
+     * Добавляет получателя письма
+     * @param to Адрес получателя
+     * @returns Текущий объект Mail
      */
-    subject(subject: String): Mail
+    to(to: String): Mail;
 
     /**
-     * info
-     * @param body
+     * Устанавливает тему письма
+     * @param subject Тема письма
+     * @returns Текущий объект Mail
      */
-    body(body: String): Mail
+    subject(subject: String): Mail;
 
     /**
-     * info
+     * Устанавливает тело письма
+     * @param body Текст тела письма
+     * @returns Текущий объект Mail
      */
-    send()
+    body(body: String): Mail;
+
+    /**
+     * Отправляет письмо
+     */
+    send();
 }
 
+/**
+ * Интерфейс для подключения к внешним устройствам по SSH
+ */
 interface SSH {
-    /**
-     * info
-     * @param host
-     */
-    host(host: String): SSH
 
     /**
-     * info
-     * @param port
+     * Устанавливает хост для подключения
+     * @param host Адрес сервера
+     * @returns Текущий объект SSH
      */
-    port(port: number): SSH
+    host(host: String): SSH;
 
     /**
-     * info
-     * @param username
+     * Устанавливает порт для подключения
+     * @param port Номер порта
+     * @returns Текущий объект SSH
      */
-    username(username: String): SSH
+    port(port: number): SSH;
 
     /**
-     * info
-     * @param password
+     * Устанавливает имя пользователя для подключения
+     * @param username Имя пользователя
+     * @returns Текущий объект SSH
      */
-    password(password: String): SSH
+    username(username: String): SSH;
 
     /**
-     * info
+     * Устанавливает пароль для подключения
+     * @param password Пароль пользователя
+     * @returns Текущий объект SSH
      */
-    connect(): SSHSession
+    password(password: String): SSH;
+
+    /**
+     * Устанавливает соединение
+     * @returns Объект SSHSession
+     */
+    connect(): SSHSession;
 }
 
+/**
+ * Сессия SSH подключения для выполнения команд
+ */
 interface SSHSession {
     /**
-     * info
-     * @param command
-     * @param timeout
+     * Выполняет команду на удалённом сервере
+     * @param command Команда для выполнения
+     * @param timeout Максимальное время ожидания выполнения (в миллисекундах)
      */
-    execute(command: String, timeout?: number)
+    execute(command: String, timeout?: number);
 
     /**
-     * info
-     * @param command
-     * @param timeout
+     * Выполняет команду на удалённом сервере и возвращает результат
+     * @param command Команда для выполнения
+     * @param timeout Максимальное время ожидания выполнения (в миллисекундах)
+     * @returns Результат выполнения команды в виде строки
      */
-    request(command: String, timeout?: number): String
+    request(command: String, timeout?: number): String;
 }
 
+/**
+ * Интерфейс уведомлений
+ */
 interface Notifier {
     /**
-     * info
-     * @param text
-     * @param arguments
+     * Создаёт текстовое уведомление
+     * @param text Текст уведомления
+     * @param arguments Дополнительные параметры
+     * @returns Объект Notify
      */
-    text(text: String, ...arguments: any[]): Notify
+    text(text: String, ...arguments: any[]): Notify;
 }
 
+/**
+ * Интерфейс для работы с уведомлениями
+ */
 interface Notify {
     /**
-     * info
-     * @param index
-     * @param clients
+     * Устанавливает адресатов уведомления
+     * @param index Индекс адресата
+     * @param clients Список клиентов для уведомления
+     * @returns Текущий объект Notify
      */
-    to(index: String, ...clients: String[]): Notify
+    to(index: String, ...clients: String[]): Notify;
 
     /**
-     * info
-     * @param text
+     * Устанавливает текст уведомления для отладки
+     * @param text Текст уведомления
+     * @returns Текущий объект Notify
      */
-    debugText(text: String): Notify
+    debugText(text: String): Notify;
 
     /**
-     * info
+     * Отправляет уведомление
      */
-    send()
+    send();
 }
 
 
