@@ -1,0 +1,28 @@
+Web: 1.5.34 (ccpMYc4) (local)
+Sprut.hub 2 (1.11.3_13669/5957)
+IMAQLIQ gbox-x3 (20250210_1437_spruthub2)
+JDK: 17.0.14 (Zulu17.56+15-CA)
+Serial: 97FD7B83E9C12351
+Time: 2025.07.11 23:15:01 (MSK)
+Uptime: 24539
+Need update: false
+Flash: true
+
+Google_1 - NOT_LOADED
+Yandex_1 - NOT_LOADED
+Yandex_2 - NOT_LOADED
+
+wlan1: Клиент - Отключено, DHCP - Автоматически
+wlan0: Клиент - Активно, DHCP - Автоматически
+end0: Клиент - Активно, DHCP - Автоматически
+_______________________________
+Accessory: A-OK AM35 (_TZE200_2odrmqwq TS0601)
+Firmware: 72
+Online: true
+Serial: 403059FFFEA8866A
+Controller: ZigBee_1 (LOADED)
+Last update: 2025-07-11 - 23:14:24 (MSK)
+
+https://sprut.ai/catalog/item/id/5281
+
+_______________________________

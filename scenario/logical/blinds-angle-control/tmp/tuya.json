@@ -1,0 +1,216 @@
+[
+  {
+    "code": "control",
+    "defaultValue": "",
+    "canTrigger": true,
+    "iconname": "icon-dp_power2",
+    "type": "obj",
+    "executable": true,
+    "mode": "rw",
+    "defaultRecommend": false,
+    "name": "设备控制",
+    "property": {
+      "range": [
+        "open",
+        "stop",
+        "close",
+        "continue"
+      ],
+      "type": "enum"
+    },
+    "subType": "enum",
+    "id": 1,
+    "editPermission": false
+  },
+  {
+    "code": "percent_control",
+    "defaultValue": "",
+    "canTrigger": true,
+    "type": "obj",
+    "executable": true,
+    "mode": "rw",
+    "defaultRecommend": false,
+    "name": "开启百分比控制",
+    "property": {
+      "unit": "%",
+      "min": 0,
+      "max": 100,
+      "scale": 0,
+      "step": 1,
+      "type": "value"
+    },
+    "subType": "value",
+    "id": 2,
+    "editPermission": false
+  },
+  {
+    "code": "percent_state",
+    "defaultValue": "",
+    "canTrigger": true,
+    "type": "obj",
+    "executable": true,
+    "mode": "ro",
+    "defaultRecommend": false,
+    "name": "开启百分比状态",
+    "property": {
+      "unit": "%",
+      "min": 0,
+      "max": 100,
+      "scale": 0,
+      "step": 1,
+      "type": "value"
+    },
+    "subType": "value",
+    "id": 3,
+    "editPermission": false
+  },
+  {
+    "code": "control_back",
+    "defaultValue": "",
+    "canTrigger": true,
+    "type": "obj",
+    "executable": true,
+    "mode": "rw",
+    "defaultRecommend": false,
+    "name": "电机方向",
+    "property": {
+      "range": [
+        "forward",
+        "back"
+      ],
+      "type": "enum"
+    },
+    "subType": "enum",
+    "id": 5,
+    "editPermission": false
+  },
+  {
+    "code": "work_state",
+    "defaultValue": "",
+    "canTrigger": true,
+    "type": "obj",
+    "executable": true,
+    "mode": "ro",
+    "defaultRecommend": false,
+    "name": "工作状态",
+    "property": {
+      "range": [
+        "opening",
+        "closing"
+      ],
+      "type": "enum"
+    },
+    "subType": "enum",
+    "id": 7,
+    "editPermission": false
+  },
+  {
+    "code": "fault",
+    "defaultValue": "",
+    "canTrigger": true,
+    "type": "obj",
+    "executable": true,
+    "mode": "ro",
+    "defaultRecommend": false,
+    "name": "故障告警",
+    "property": {
+      "label": [
+        "motor_fault"
+      ],
+      "type": "bitmap",
+      "maxlen": 1
+    },
+    "subType": "bitmap",
+    "id": 12,
+    "editPermission": false
+  },
+  {
+    "code": "restrictUp",
+    "defaultValue": "",
+    "canTrigger": true,
+    "type": "obj",
+    "executable": true,
+    "mode": "rw",
+    "defaultRecommend": false,
+    "name": "设置上限位",
+    "property": {
+      "type": "bool"
+    },
+    "subType": "bool",
+    "id": 101,
+    "editPermission": false
+  },
+  {
+    "code": "restrictDown",
+    "defaultValue": "",
+    "canTrigger": true,
+    "type": "obj",
+    "executable": true,
+    "mode": "rw",
+    "defaultRecommend": false,
+    "name": "设置下限位点",
+    "property": {
+      "type": "bool"
+    },
+    "subType": "bool",
+    "id": 102,
+    "editPermission": false
+  },
+  {
+    "code": "DeleteAll",
+    "defaultValue": "",
+    "canTrigger": true,
+    "type": "obj",
+    "executable": true,
+    "mode": "rw",
+    "defaultRecommend": false,
+    "name": "删除所有限位点",
+    "property": {
+      "type": "bool"
+    },
+    "subType": "bool",
+    "id": 103,
+    "editPermission": false
+  },
+  {
+    "code": "setangle",
+    "defaultValue": "",
+    "canTrigger": true,
+    "type": "obj",
+    "executable": true,
+    "mode": "rw",
+    "defaultRecommend": false,
+    "name": "设置角度",
+    "property": {
+      "unit": "",
+      "min": 1,
+      "max": 10,
+      "scale": 1,
+      "step": 1,
+      "type": "value"
+    },
+    "subType": "value",
+    "id": 105,
+    "editPermission": false
+  },
+  {
+    "code": "jolcon",
+    "defaultValue": "",
+    "canTrigger": true,
+    "type": "obj",
+    "executable": true,
+    "mode": "rw",
+    "defaultRecommend": false,
+    "name": "点动连动切换",
+    "property": {
+      "range": [
+        "jol",
+        "con"
+      ],
+      "type": "enum"
+    },
+    "subType": "enum",
+    "id": 106,
+    "editPermission": false
+  }
+]
